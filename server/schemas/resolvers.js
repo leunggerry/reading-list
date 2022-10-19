@@ -1,7 +1,10 @@
 /**
  * Import require libs
  */
+const { AuthenticationError } = require("apollo-server-express");
 const { User } = require("../models");
+//import signed token
+const { signToken } = require("../utils/auth");
 /**
  * Connect Query or Mutation type def that performs a CRUB action
  * that each query or mutation is expedted to perform
@@ -24,9 +27,31 @@ const resolvers = {
       //Create User in Mongos in the DB give the args in the parms
       const user = await User.create(args);
 
-      //add authentication
+      //create a token for the user
+      const token = signToken(user);
 
-      return user;
+      //return Auth type
+      return { token, user };
+    },
+
+    login: async (parent, { email, password }) => {
+      //find a user by their email
+      const user = await User.findOne({ email });
+
+      //if not user is found
+      if (!user) {
+        throw new AuthenticationError("Incorect Credentials");
+      }
+
+      //check the password
+      const correctPw = await user.isCorrectPassword(password);
+
+      if (!correctPw) {
+        throw new AuthenticationError("Incorrect Credentials");
+      }
+      
+      const token = signToken(user);
+      return { token, user };
     },
   },
 };
