@@ -67,6 +67,36 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
+
+    // book mutations
+    saveBook: async (parent, { input }, context) => {
+      //check if user is logged in
+      if (context.user) {
+        const updatedUser = User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $push: { savedBooks: input } },
+          { new: true }
+        );
+
+        return updatedUser;
+      }
+      throw new AuthenticationError("You need to be logged in!");
+    },
+
+    //remove book
+    removeBook: async (parent, { bookId }, context) => {
+      //check if user is logged in
+      if (context.user) {
+        const updatedUser = User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $pull: { savedBooks: {bookId: bookId} } },
+          { new: true }
+        );
+
+        return updatedUser;
+      }
+      throw new AuthenticationError("You need to be logged in!");
+    },
   },
 };
 
