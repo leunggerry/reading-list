@@ -74,9 +74,9 @@ const resolvers = {
       if (context.user) {
         const updatedUser = User.findOneAndUpdate(
           { _id: context.user._id },
-          { $push: { savedBooks: input } },
+          { $addToSet: { savedBooks: input } },
           { new: true }
-        );
+        ).populate("savedBooks");
 
         return updatedUser;
       }
@@ -89,9 +89,9 @@ const resolvers = {
       if (context.user) {
         const updatedUser = User.findOneAndUpdate(
           { _id: context.user._id },
-          { $pull: { savedBooks: {bookId: bookId} } },
+          { $pull: { savedBooks: { bookId: bookId } } },
           { new: true }
-        );
+        ).populate("savedBooks");
 
         return updatedUser;
       }
