@@ -20,7 +20,7 @@ npm install
 ![Sign up page](./res/images/signup.png)
 ![Book Search](./res/images/book-search.png)
 ![Saved books](./res/images/savedbooks.png)
-![Deleting a book](./res/images/Screen%20Recording%202022-10-20%20at%206.24.01%20PM.mov)
+![Delete book](./res/images/deletebook.png)
 
 ## Questions
 
